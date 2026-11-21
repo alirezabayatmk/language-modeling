@@ -1,0 +1,9 @@
+# The engine (simulation sources, build scripts, data) stays private: only the built pages are published.
+# engine/ is a local symlink to the private sources; tools/ holds the export script and the git hooks.
+engine
+engine/
+tools/
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/

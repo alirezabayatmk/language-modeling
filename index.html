@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Language Modeling · Alireza Bayat Makou</title>
+<meta name="description" content="Interactive simulations and short, runnable code on how language models work, by Alireza Bayat Makou.">
+<meta name="author" content="Alireza Bayat Makou">
+<link rel="canonical" href="https://alirezabayatmk.github.io/language-modeling/">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Language Modeling">
+<meta property="og:description" content="Interactive simulations and short, runnable code on how language models work.">
+<meta property="og:url" content="https://alirezabayatmk.github.io/language-modeling/">
+<meta property="og:image" content="https://alirezabayatmk.github.io/language-modeling/training-a-transformer/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Language Modeling",
+ "url": "https://alirezabayatmk.github.io/language-modeling/",
+ "author": {"@type": "Person", "name": "Alireza Bayat Makou"},
+ "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+ "hasPart": [{"@type": "LearningResource", "name": "Training a Transformer: An Interactive Simulation",
+              "url": "https://alirezabayatmk.github.io/language-modeling/training-a-transformer/"}]}
+</script>
+<style>
+:root{
+  --bg:#f6f7fb;--card:#fff;--ink:#0f172a;--ink2:#334155;--muted:#64748b;--line:#e2e8f0;
+  --accent:#4f46e5;--accent-soft:#eef2ff;--code:#f1f5f9;
+  --sans:Inter,"Segoe UI",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono","DejaVu Sans Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0b1020;--card:#131a2e;--ink:#e5e7eb;--ink2:#cbd5e1;--muted:#94a3b8;--line:#25304a;
+  --accent:#a5b4fc;--accent-soft:#1e2546;--code:#0f1528;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--sans)}
+a{color:var(--accent)}
+.wrap{max-width:880px;margin:0 auto;padding:56px 16px 40px}
+header h1{margin:0;font-size:clamp(30px,5vw,42px);letter-spacing:-.02em;line-height:1.15}
+header p{margin:10px 0 0;color:var(--ink2);max-width:640px}
+header .by{color:var(--muted);font-size:15px;margin-top:6px}
+.pieces{list-style:none;margin:40px 0 0;padding:0;display:grid;gap:28px}
+.piece{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(15,23,42,.05),0 10px 30px rgba(15,23,42,.06)}
+.piece > a.img{display:block;border-bottom:1px solid var(--line)}
+.piece img{display:block;width:100%;height:auto;aspect-ratio:1200/630}
+.piece .body{padding:20px 22px 22px}
+.piece .meta{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.piece h2{margin:4px 0 8px;font-size:24px;line-height:1.25}
+.piece h2 a{color:inherit;text-decoration:none}
+.piece h2 a:hover{text-decoration:underline}
+.piece p{margin:0 0 10px;color:var(--ink2)}
+.piece ul{margin:0 0 14px;padding-left:20px;color:var(--ink2)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;border:1px solid var(--line);
+  font:700 15px var(--sans);text-decoration:none;color:var(--ink);background:var(--card)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme:dark){.btn.pri{color:#0b1020}}
+.btn:hover{filter:brightness(.96)}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-weight:700;color:var(--ink2)}
+pre{margin:10px 0 0;padding:12px 14px;background:var(--code);border:1px solid var(--line);border-radius:10px;
+  font:13px/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink2)}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer p{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Language Modeling</h1>
+  <p>Interactive simulations and short, runnable code on how language models work: every step shown,
+     every number computed by real code you can read and run.</p>
+  <div class="by">Alireza Bayat Makou</div>
+</header>
+
+<ul class="pieces">
+  <li class="piece" id="training-a-transformer">
+    <a class="img" href="training-a-transformer/" aria-label="Open the simulation">
+      <img src="training-a-transformer/preview.png" width="1200" height="630"
+           alt="A slide of the simulation: the attention scores S = Q Kᵀ of a tiny GPT, with the PyTorch line that computes them highlighted in the code box.">
+    </a>
+    <div class="body">
+      <div class="meta">Simulation · 93 slides · November 2026</div>
+      <h2><a href="training-a-transformer/">Training a Transformer: An Interactive Simulation</a></h2>
+      <p>One training run of a tiny GPT, from raw text to generated text, one operation per slide:</p>
+      <ul>
+        <li>a BPE tokenizer, embeddings, two transformer blocks (attention and MLP), the output layer and the loss;</li>
+        <li>the backward pass rule by rule, the AdamW update, 600 training steps, when to stop;</li>
+        <li>decoding with temperature and top‑p.</li>
+      </ul>
+      <p>Every number on the slides comes from <code>tiny_gpt.py</code>, a 300-line PyTorch script built on nanoGPT.
+         The code box shows the lines behind each slide; the lamp (“More”) adds the why, alternatives, costs and further reading.</p>
+      <div class="actions">
+        <a class="btn pri" href="training-a-transformer/">Open the simulation →</a>
+        <a class="btn" href="training-a-transformer/tiny_gpt.py" download>tiny_gpt.py</a>
+      </div>
+      <details>
+        <summary>How to cite</summary>
+        <pre>Bayat Makou, A. (2026). Training a Transformer: An Interactive Simulation.
+https://alirezabayatmk.github.io/language-modeling/training-a-transformer/</pre>
+        <pre>@misc{bayatmakou2026trainingtransformer,
+  author = {Bayat Makou, Alireza},
+  title  = {Training a Transformer: An Interactive Simulation},
+  year   = {2026},
+  url    = {https://alirezabayatmk.github.io/language-modeling/training-a-transformer/}
+}</pre>
+      </details>
+    </div>
+  </li>
+</ul>
+
+<footer>
+  <p>© 2026 Alireza Bayat Makou. Content licensed under
+     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license">CC BY-NC-SA 4.0</a>;
+     code under the MIT License.</p>
+  <p>The model and the training loop build on <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a>
+     by Andrej Karpathy (MIT). The simulation’s interface was built with the help of Claude (Anthropic).</p>
+  <p><a href="https://github.com/alirezabayatmk/language-modeling">Source on GitHub</a></p>
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "title": "Language Modeling: interactive simulations and code",
+  "upload_type": "software",
+  "creators": [{"name": "Bayat Makou, Alireza"}],
+  "description": "<p>Interactive simulations and short, runnable code on how language models work.</p><p>First piece: <em>Training a Transformer</em>, a step-by-step simulation of one training run of a tiny GPT (tokenizer, embeddings, attention, MLP, loss, backpropagation, updates, sampling), with <code>tiny_gpt.py</code>, the 300-line PyTorch script behind every number. Online: https://alirezabayatmk.github.io/language-modeling/</p><p>Content: CC BY-NC-SA 4.0. Code: MIT. The model and training loop are adapted from nanoGPT by Andrej Karpathy (MIT).</p>",
+  "access_right": "open",
+  "license": "cc-by-nc-sa-4.0",
+  "keywords": ["transformer", "language model", "GPT", "attention", "backpropagation", "interactive simulation", "education"],
+  "related_identifiers": [
+    {"identifier": "https://alirezabayatmk.github.io/language-modeling/", "relation": "isDocumentedBy", "resource_type": "publication"},
+    {"identifier": "https://github.com/karpathy/nanoGPT", "relation": "isDerivedFrom", "resource_type": "software"}
+  ],
+  "language": "eng"
+}
