@@ -1,5 +1,7 @@
 # Language Modeling
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24409642.svg)](https://doi.org/10.5281/zenodo.24409642)
+
 Interactive simulations and short, runnable code on how language models work, by Alireza Bayat Makou.
 
 **Website:** https://alirezabayatmk.github.io/language-modeling/
@@ -33,6 +35,7 @@ See [CITATION.cff](CITATION.cff) (GitHub shows a "Cite this repository" button),
   author = {Bayat Makou, Alireza},
   title  = {Training a Transformer: An Interactive Simulation},
   year   = {2026},
+  doi    = {10.5281/zenodo.24409642},
   url    = {https://alirezabayatmk.github.io/language-modeling/training-a-transformer/}
 }
 ```
