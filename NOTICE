@@ -21,10 +21,6 @@ adapted from nanoGPT (https://github.com/karpathy/nanoGPT),
 Copyright (c) 2022 Andrej Karpathy, distributed under the MIT License.
 nanoGPT's full license notice is reproduced in LICENSE-CODE.
 
-CREDITS
-
-The interface of the simulations was built with the help of Claude (Anthropic).
-
 CITATION
 
 See CITATION.cff.
