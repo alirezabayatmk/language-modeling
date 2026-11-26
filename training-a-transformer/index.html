@@ -1553,7 +1553,8 @@ const SLOTS = ["ge", "gp", "g0", "gu", "gu2", "gy1", "gy"];
 /* paths (current layout) */
 const hY = (h, i) => BR(i) + (h ? 5 : -5);
 const hX = h => h ? OX.h2 : OX.h1;
-const attnPath = (h, i, j) => { const xs = OX.v + 6, xe = hX(h) - 7, ys = BR(i), ye = hY(h, j), dx = (xe - xs) * 0.42; return `M ${xs} ${ys} C ${xs + dx} ${ys} ${xe - dx} ${ye} ${xe} ${ye}`; };
+const QKH = h => h ? 4.5 : -4.5;   // the two head halves of a Q, K or V column
+const attnPath = (h, i, j) => { const xs = OX.v + QKH(h) + 3, xe = hX(h) - 7, ys = BR(i), ye = hY(h, j), dx = (xe - xs) * 0.42; return `M ${xs} ${ys} C ${xs + dx} ${ys} ${xe - dx} ${ye} ${xe} ${ye}`; };
 const epTop = i => OX.dataFull ? `M ${OX.tok + 4} ${LY(i)} L ${OX.ep - 32} ${LY(i)}` : `M ${OX.ep + 30} ${LY(i) - 13} L ${OX.eplus - 6} ${LY(i) - 13} Q ${OX.eplus} ${LY(i) - 13} ${OX.eplus} ${LY(i) - 9}`;
 const epBot = i => OX.dataFull ? `M ${OX.pp + 32} ${LY(i)} L ${OX.emb - 32} ${LY(i)}` : `M ${OX.ep + 30} ${LY(i) + 13} L ${OX.eplus - 6} ${LY(i) + 13} Q ${OX.eplus} ${LY(i) + 13} ${OX.eplus} ${LY(i) + 9}`;
 const stemPath = (x, i) => `M ${x} ${LY(i) - 8} L ${x} ${BR(i) + 7}`;
@@ -1783,10 +1784,13 @@ function drawBlockFull(L, s, r, k) {
   const gc = sv(s, "g", {}), gB = sv(s, "g", {});
   /* the shared modules: one column each */
   hit(mcol(gc, OX.ln1, 16, "#eef2f7", "#cbd5e1"), "LayerNorm: ONE module (8 numbers γ), applied to each lane separately");
-  [0, 1].forEach(h => hit(mcol(gc, hX(h), 26, h ? "rgba(192,38,211,.08)" : "rgba(79,70,229,.08)", h ? "rgba(192,38,211,.45)" : "rgba(79,70,229,.45)"), `head ${h + 1}: ONE set of W_Q, W_K, W_V (8 × 4 each), used by all 9 lanes`));
-  hit(mcol(gc, OX.wo, 26, "#e0f2fe", "rgba(3,105,161,.45)"), "W_O: ONE 8 × 8 matrix; it mixes the two heads' outputs of each lane");
-  { const gq = sv(gc, "g", {}); [[OX.q, "rgba(37,99,235,.12)", "rgba(37,99,235,.5)"], [OX.k, "rgba(220,38,38,.10)", "rgba(220,38,38,.5)"], [OX.v, "rgba(22,163,74,.10)", "rgba(22,163,74,.5)"]].forEach(([x, f2, s2]) => mcol(gq, x, 14, f2, s2));
-    hit(gq, "Q, K, V: ONE weight (nanoGPT's c_attn, 24 columns: Q, K, V × 2 heads × 4) gives every lane a query, a key and a value, 4 numbers each per head"); }
+  [0, 1].forEach(h => hit(mcol(gc, hX(h), 26, h ? "rgba(192,38,211,.08)" : "rgba(79,70,229,.08)", h ? "rgba(192,38,211,.45)" : "rgba(79,70,229,.45)"), `head ${h + 1}: scores, mask, softmax and A V on its own Q, K, V (the head-${h + 1} halves to the left); output: 4 numbers per lane`));
+  hit(mcol(gc, OX.wo, 26, "#e0f2fe", "rgba(3,105,161,.45)"), "W_O: ONE 8 × 8 matrix, shared by both heads: rows 0–3 read head 1's 4 numbers, rows 4–7 head 2's; it mixes them into 8 numbers per lane");
+  /* Q, K, V: each head has its own W_Q, W_K, W_V (8 × 4); nanoGPT keeps all six in one weight, c_attn (8 × 24). Each column is drawn
+     as two halves outlined in the head colors, so the picture does not suggest that the heads share Q, K, V */
+  [[OX.q, "rgba(37,99,235,.14)", "query", "W_Q"], [OX.k, "rgba(220,38,38,.12)", "key", "W_K"], [OX.v, "rgba(22,163,74,.12)", "value", "W_V"]].forEach(([x, f2, nm, Wn]) =>
+    [0, 1].forEach(h => hit(mcol(gc, x + QKH(h), 7, f2, h ? "rgba(192,38,211,.7)" : "rgba(79,70,229,.7)"),
+      `${nm}, head ${h + 1}: its own ${Wn} (8 × 4). In nanoGPT all six (Q, K, V × 2 heads) sit side by side in ONE weight, c_attn (8 × 24), computed in one product; every lane gets a ${nm} of 4 numbers for head ${h + 1}`)));
   hit(mcol(gc, OX.ln2, 16, "#eef2f7", "#cbd5e1"), "LayerNorm 2: ONE module, applied to each lane");
   const gm = sv(gc, "g", {}); mcol(gm, OX.mlp, OX.mlpW, "#fffaf0", "rgba(183,121,31,.45)"); mlpMark(gm, OX.mlp, OX.mlpW - 18, CTOP + 8, CBOT - 8, .8);
   hit(gm, "the MLP: ONE network (W₁ 8 × 32, GELU, W₂ 32 × 8), applied to each lane separately");
@@ -1797,7 +1801,7 @@ function drawBlockFull(L, s, r, k) {
   TK.forEach((t, i) => {
     [OX.ln1, OX.ln2].forEach(x => sv(gB, "path", {d: stemPath(x, i), stroke: "#94a3b8", "stroke-width": 2, fill: "none"}));
     sv(gB, "path", {d: qkvPath(i), stroke: "#94a3b8", "stroke-width": 2, fill: "none"});
-    [[OX.q, C.q], [OX.k, C.k], [OX.v, C.v]].forEach(([x, c2]) => sv(gB, "circle", {cx: x, cy: BR(i), r: 3.6, fill: c2}));
+    [[OX.q, C.q], [OX.k, C.k], [OX.v, C.v]].forEach(([x, c2]) => [0, 1].forEach(h => sv(gB, "circle", {cx: x + QKH(h), cy: BR(i), r: 2.6, fill: c2})));
     [0, 1].forEach(h => sv(gB, "path", {d: headPath(h, i), stroke: h ? C.h2 : C.h1, "stroke-width": 1.6, fill: "none"}));
     sv(gB, "path", {d: woPath(i), stroke: C.mha, "stroke-width": 2, fill: "none"});
     sv(gB, "path", {d: mlpUp(i), stroke: "#d9a441", "stroke-width": 2.2, fill: "none"}); sv(gB, "path", {d: mlpDown(i), stroke: "#d9a441", "stroke-width": 2.2, fill: "none"});
@@ -1807,7 +1811,7 @@ function drawBlockFull(L, s, r, k) {
     [OX.ln1, OX.ln2].forEach(x => hit(diamond(gB, x, BR(i), 5.5), `LayerNorm applied to ${t}'s lane (the lane itself is not changed)`));
     [OX.p1, OX.p2].forEach((x, q) => { const gg = sv(gB, "g", {}); plus(gg, x, LY(i), 11); hit(gg, `add: ${t}'s lane += the ${q ? "MLP" : "attention"} branch's output`); });
   });
-  [[OX.ln1, "LayerNorm"], [OX.k, "Q K V", C.q], [(OX.v + OX.h1) / 2, r.w > 1300 ? "scores QKᵀ/2 → mask → softmax" : "scores → softmax", C.a], [OX.h1, "head 1", C.h1], [OX.h2, "head 2", C.h2], [OX.wo, "W_O"], [OX.p1, "add"], [OX.ln2, "LayerNorm"], [OX.mlp, "MLP: one network"], [OX.p2, "add"]]
+  [[OX.ln1, "LayerNorm"], [OX.k, "Q K V: head 1 | head 2", C.q], [(OX.v + OX.h1) / 2, r.w > 1300 ? "scores QKᵀ/2 → mask → softmax" : "scores → softmax", C.a], [OX.h1, "head 1", C.h1], [OX.h2, "head 2", C.h2], [OX.wo, "W_O (one, shared)"], [OX.p1, "add"], [OX.ln2, "LayerNorm"], [OX.mlp, "MLP: one network"], [OX.p2, "add"]]
     .forEach(([x, t, c, a]) => lbl(OV.lblG, x, t, c || "#94a3b8", LY(N - 1) + 32, a || "middle"));
   (k ? OV.gu2 : OV.gu).forEach((q, i) => q.attach(glyph(L, OX.u, LY(i), {cw: 6, ch: 16})));
   (k ? OV.gy : OV.gy1).forEach((q, i) => q.attach(glyph(L, OX["y" + (k + 1)], LY(i), {cw: 5, ch: 16})));
